@@ -1,0 +1,68 @@
+﻿@using netcore.fcimiddleware.fondos.web.Models.V1.Moneda
+@model GetByIdMonedaResponse
+@{
+    ViewData["Title"] = "Detallar Moneda";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Monedas</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Moneda" asp-action="Index">Monedas</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-6">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">@ViewData["Title"]</h3>
+
+                        <div class="card-tools">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                            <b>Moneda #@Html.DisplayTextFor(m => m.Id)</b><br>
+                            <br>
+                            <b>Descripcion:</b> @Html.DisplayTextFor(m => m.Descripcion)<br>
+                            <b>Codigo CAFCI:</b> @Html.DisplayTextFor(m => m.IdCAFCI)<br>
+                            <b>Creado:</b> @Html.DisplayTextFor(m => m.CreatedDate)<br>
+                            <b>Creado Por:</b> @Html.DisplayTextFor(m => m.CreatedBy)
+                            </div>
+                            <div class="col-sm-6">
+                            <b></b><br>
+                            <br>
+                            <b>Anulado:</b> @Html.DisplayTextFor(m => m.IsDeleted)<br>
+                            <b>Sincronizado:</b> @Html.DisplayTextFor(m => m.IsSincronized)<br>
+                            <b>Modificado:</b> @Html.DisplayTextFor(m => m.LastModifiedDate)<br>
+                            <b>Modificado Por:</b> @Html.DisplayTextFor(m => m.LastModifiedBy)
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <a asp-area="" asp-controller="Moneda" asp-action="Index" class="btn btn-secondary">Aceptar</a>
+                    </div>
+                </div>
+            <!-- /.card -->
+        </div>
+    </div>
+</section>
+<!-- /.content -->

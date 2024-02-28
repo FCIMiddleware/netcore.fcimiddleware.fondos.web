@@ -1,0 +1,171 @@
+﻿@using netcore.fcimiddleware.fondos.web.Models.V1.Shared
+@using netcore.fcimiddleware.fondos.web.Models.V1.Moneda
+@model PaginationQueryResponse<GetByIdMonedaResponse>
+@{
+    ViewData["Title"] = "Monedas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">@ViewData["Title"]</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Moneda" asp-action="Add">
+        <i class="fa fa-plus">
+        </i>
+        Agregar
+    </a>
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">@ViewData["Title"]</h3>
+            
+            <div class="card-tools">
+                <form asp-controller="Moneda" asp-action="Index" method="get">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" id="search" name="search" class="form-control float-right" value="@ViewData["search"]" placeholder="Search">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-default">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped projects">
+                <thead>
+                    <tr>
+                        <th style="width: 1%">
+                            #
+                        </th>
+                        <th style="width: 20%">
+                        <a asp-action="Index" asp-route-search="@ViewData["search"]"
+                           asp-route-sort="descripcionAsc">
+                            Descripcion
+                            </a>
+                        </th>
+                        <th style="width: 20%">
+                            CAFCI
+                        </th>
+                        <th style="width: 8%" class="text-center">
+                            Anulado
+                        </th>
+                        <th style="width: 8%" class="text-center">
+                            Sincronizado
+                        </th>
+                        <th style="width: 20%">
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Data)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @if (item.IsDeleted)
+                                {
+                                    <a class="text-danger">@Html.DisplayFor(modelItem => item.Descripcion)</a>
+                                }else
+                                {
+                                    <a>@Html.DisplayFor(modelItem => item.Descripcion)</a>
+                                }
+                                <br />
+                                <small>
+                                    Creado @Html.DisplayFor(modelItem => item.CreatedDate)
+                                </small>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdCAFCI)
+                            </td>
+                            <td class="project-state">
+                                @Html.DisplayFor(modelItem => item.IsDeleted)
+                            </td>
+                            <td class="project-state">
+                                @Html.DisplayFor(modelItem => item.IsSincronized)
+                            </td>
+                            @{
+                                var disable = item.IsDeleted? "disabled" : "";
+                            }
+                            <td class="project-actions text-right">
+                                <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Moneda" asp-action="Detail" asp-route-id="@item.Id">
+                                    <i class="fas fa-folder">
+                                    </i>
+                                    Detallar
+                                </a>
+                                <a class="btn btn-info btn-sm @disable" asp-area="" asp-controller="Moneda" asp-action="Edit" asp-route-id="@item.Id">
+                                    <i class="fas fa-pencil-alt">
+                                    </i>
+                                    Editar
+                                </a>
+                                <a class="btn btn-danger btn-sm @disable" asp-area="" asp-controller="Moneda" asp-action="Delete" asp-route-id="@item.Id">
+                                    <i class="fas fa-trash">
+                                    </i>
+                                    Borrar
+                                </a>
+                            </td>
+                        </tr>
+                    }                
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer clearfix">
+            <ul class="pagination pagination-sm m-0 float-right">
+                @{
+                    var firstPage = Model.PageCount == 0 ? 1 : 1;
+                    var lastPage = Model.PageCount == 0 ? 1 : Model.PageCount;
+                }
+                <li class="page-item">
+                <a class="page-link" asp-area=""
+                   asp-controller="Moneda"
+                   asp-action="Index"
+                   asp-route-search="@ViewData["search"]"
+                   asp-route-sort="@ViewData["sort"]"
+                   asp-route-pageIndex=1>&laquo;</a>
+                    </li>
+                @for (var i = 1; i <= lastPage; i++)
+                {
+                <li class="page-item"><a class="page-link" 
+                    asp-area="" 
+                    asp-controller="Moneda" 
+                    asp-action="Index" 
+                    asp-route-search="@ViewData["search"]"
+                    asp-route-sort="@ViewData["sort"]"
+                    asp-route-pageIndex="@i">@i</a>
+                </li>
+                }
+            <li class="page-item">
+                <a class="page-link" asp-area=""
+                   asp-controller="Moneda"
+                   asp-action="Index"
+                   asp-route-search="@ViewData["search"]"
+                   asp-route-sort="@ViewData["sort"]"
+                   asp-route-pageIndex=@Model.PageCount>&raquo;</a>
+            </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->
