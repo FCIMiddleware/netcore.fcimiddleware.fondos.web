@@ -11,15 +11,15 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
     public class MonedaController : Controller
     {
         private readonly ILogger<MonedaController> _logger;
-        private readonly IMonedaProxy _monedaProxy;
+        private readonly IMonedaProxy _proxy;
 
         public MonedaController(
             ILogger<MonedaController> logger,
-            IMonedaProxy MonedaProxy
+            IMonedaProxy proxy
             )
         {
             _logger = logger;
-            _monedaProxy = MonedaProxy;
+            _proxy = proxy;
         }
 
         [HttpGet]
@@ -29,7 +29,7 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
             ViewData["search"] = search;
             ViewData["sort"] = sort;
             ViewData["pageIndex"] = pageIndex;
-            var result = await _monedaProxy.PaginationMoneda(new PaginationQueryRequest { PageIndex = pageIndex, PageSize = pageSize, Search = search, Sort = sort });
+            var result = await _proxy.Pagination(new PaginationQueryRequest { PageIndex = pageIndex, PageSize = pageSize, Search = search, Sort = sort });
 
             if (result.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -57,7 +57,7 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _monedaProxy.CreateMoneda(request);
+                var result = await _proxy.Create(request);
 
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -91,7 +91,7 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _monedaProxy.GetByIdMoneda(new GetByIdMonedaRequest { Id = id });
+            var result = await _proxy.GetById(new GetByIdMonedaRequest { Id = id });
 
             if (result.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -115,7 +115,7 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeleteMonedaRequest request)
         {            
-            var result = await _monedaProxy.DeleteMoneda(request);
+            var result = await _proxy.Delete(request);
 
             if (result.StatusCode != System.Net.HttpStatusCode.NoContent)
             {
@@ -132,7 +132,7 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var result = await _monedaProxy.GetByIdMoneda(new GetByIdMonedaRequest { Id = id});
+            var result = await _proxy.GetById(new GetByIdMonedaRequest { Id = id});
 
             if (result.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -160,7 +160,7 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _monedaProxy.UpdateMoneda(request);
+                var result = await _proxy.Update(request);
                 if ((result.StatusCode != System.Net.HttpStatusCode.OK) && (result.StatusCode != System.Net.HttpStatusCode.NoContent))
                 {
                     var badRequest = await getBadRequest(result);
@@ -178,7 +178,7 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
         [HttpGet]
         public async Task<IActionResult> Detail(int id)
         {
-            var result = await _monedaProxy.GetByIdMoneda(new GetByIdMonedaRequest { Id = id });
+            var result = await _proxy.GetById(new GetByIdMonedaRequest { Id = id });
 
             if (result.StatusCode != System.Net.HttpStatusCode.OK)
             {
