@@ -5,10 +5,10 @@ namespace netcore.fcimiddleware.fondos.web.Services.Moneda
 {
     public interface IMonedaProxy
     {
-        Task<HttpResponseMessage> CreateMoneda(CreateMonedaRequest request);
-        Task<HttpResponseMessage> UpdateMoneda(UpdateMonedaRequest request);
-        Task<HttpResponseMessage> DeleteMoneda(DeleteMonedaRequest request);
-        Task<HttpResponseMessage> PaginationMoneda(PaginationQueryRequest request);
-        Task<HttpResponseMessage> GetByIdMoneda(GetByIdMonedaRequest request);
+        Task<HttpResponseMessage> Create(CreateMonedaRequest request);
+        Task<HttpResponseMessage> Update(UpdateMonedaRequest request);
+        Task<HttpResponseMessage> Delete(DeleteMonedaRequest request);
+        Task<HttpResponseMessage> Pagination(PaginationQueryRequest request);
+        Task<HttpResponseMessage> GetById(GetByIdMonedaRequest request);
     }
 }
