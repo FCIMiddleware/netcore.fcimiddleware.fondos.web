@@ -1,5 +1,5 @@
-using Microsoft.Extensions.FileProviders;
 using netcore.fcimiddleware.fondos.web.Services.Moneda;
+using netcore.fcimiddleware.fondos.web.Services.Pais;
 using netcore.fcimiddleware.fondos.web.Services.Proxies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +14,7 @@ builder.Services.Configure<ApiUrls>(
 
 // Proxies
 builder.Services.AddHttpClient<IMonedaProxy, MonedaProxy>();
+builder.Services.AddHttpClient<IPaisProxy, PaisProxy>();
 
 var app = builder.Build();
 
