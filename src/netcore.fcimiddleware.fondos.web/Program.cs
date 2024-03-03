@@ -1,6 +1,9 @@
-using netcore.fcimiddleware.fondos.web.Services.Moneda;
-using netcore.fcimiddleware.fondos.web.Services.Pais;
+using netcore.fcimiddleware.fondos.web.Services.AgColocadores;
+using netcore.fcimiddleware.fondos.web.Services.Monedas;
+using netcore.fcimiddleware.fondos.web.Services.Paises;
 using netcore.fcimiddleware.fondos.web.Services.Proxies;
+using netcore.fcimiddleware.fondos.web.Services.SocDepositarias;
+using netcore.fcimiddleware.fondos.web.Services.SocGerentes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +16,13 @@ builder.Services.Configure<ApiUrls>(
     );
 
 // Proxies
-builder.Services.AddHttpClient<IMonedaProxy, MonedaProxy>();
+
+builder.Services.AddHttpClient<ISocDepositariaProxy, SocDepositariaProxy>();
 builder.Services.AddHttpClient<IPaisProxy, PaisProxy>();
+builder.Services.AddHttpClient<IMonedaProxy, MonedaProxy>();
+builder.Services.AddHttpClient<ISocGerenteProxy, SocGerenteProxy>();
+builder.Services.AddHttpClient<IAgColocadorProxy, AgColocadorProxy>();
+
 
 var app = builder.Build();
 

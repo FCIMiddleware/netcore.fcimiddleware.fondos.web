@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using netcore.fcimiddleware.fondos.web.Models;
-using netcore.fcimiddleware.fondos.web.Models.V1.Moneda;
-using netcore.fcimiddleware.fondos.web.Models.V1.Shared;
-using netcore.fcimiddleware.fondos.web.Services.Moneda;
+using netcore.fcimiddleware.fondos.web.Models.Shared;
+using netcore.fcimiddleware.fondos.web.Models.V1.Monedas;
+using netcore.fcimiddleware.fondos.web.Services.Monedas;
 using System.Diagnostics;
 using System.Text.Json;
 
@@ -31,146 +31,123 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
             ViewData["pageIndex"] = pageIndex;
             var result = await _proxy.Pagination(new PaginationQueryRequest { PageIndex = pageIndex, PageSize = pageSize, Search = search, Sort = sort });
 
-            if (result.StatusCode != System.Net.HttpStatusCode.OK)
+            if (result.IsSuccessStatusCode)
             {
-                var badRequest = await getBadRequest(result);
-
-                ModelState.AddModelError(string.Empty, badRequest.Message);
-                return RedirectToAction("Index", "Home");
-            }
-
-            var data = JsonSerializer.Deserialize<PaginationQueryResponse<GetByIdMonedaResponse>>(
+                var data = JsonSerializer.Deserialize<PaginationQueryResponse<Moneda>>(
                     await result.Content.ReadAsStringAsync(),
                     new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
                     }
                 );
+                return View(data);
+            }
 
-            return View(data);
+            var badRequest = await getBadRequest(result);
+            ModelState.AddModelError(string.Empty, badRequest.Message);
+            return RedirectToAction("Index", "Home");
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(CreateMonedaRequest request)
+        public async Task<IActionResult> Add(Moneda request)
         {
             if (ModelState.IsValid)
             {
                 var result = await _proxy.Create(request);
-
-                if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                if (result.IsSuccessStatusCode)
                 {
-                    var badRequest = await getBadRequest(result);
-
-                    ModelState.AddModelError(string.Empty, badRequest.Message);
-                    return View(request);
-                }
-
-                var dateResponse = JsonSerializer.Deserialize<int>(
+                    var dateResponse = JsonSerializer.Deserialize<int>(
                         await result.Content.ReadAsStringAsync(),
                         new JsonSerializerOptions
                         {
                             PropertyNameCaseInsensitive = true
                         }
                     );
+                    return RedirectToAction(nameof(Index));
+                }
 
-                return RedirectToAction(nameof(Index));
+                var badRequest = await getBadRequest(result);
+                ModelState.AddModelError(string.Empty, badRequest.Message);
+                return View(request);
             }
-            
+
             return View(request);
         }
 
         [HttpGet]
         public IActionResult Add()
         {
-            CreateMonedaRequest model = new CreateMonedaRequest();
+            Moneda model = new Moneda();
             return View(model);
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _proxy.GetById(new GetByIdMonedaRequest { Id = id });
+            var request = new Moneda { Id = id };
+            var result = await _proxy.GetById(request);
 
-            if (result.StatusCode != System.Net.HttpStatusCode.OK)
+            if (result.IsSuccessStatusCode)
             {
-                var badRequest = await getBadRequest(result);
-
-                ModelState.AddModelError(string.Empty, badRequest.Message);
-                return RedirectToAction("Index", "Home");
+                var data = await getById(result);
+                return View(data);
             }
 
-            var data = await getById(result);
-
-            var model = new DeleteMonedaRequest
-            {
-                Id = data.Id
-            };
-
-            return View(model);
+            var badRequest = await getBadRequest(result);
+            ModelState.AddModelError(string.Empty, badRequest.Message);
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(DeleteMonedaRequest request)
+        public async Task<IActionResult> Delete(Moneda request)
         {            
             var result = await _proxy.Delete(request);
 
-            if (result.StatusCode != System.Net.HttpStatusCode.NoContent)
+            if (result.IsSuccessStatusCode)
             {
-                var badRequest = await getBadRequest(result);
-
-                ModelState.AddModelError(string.Empty, badRequest.Message);
-                return View(request);
+                return RedirectToAction(nameof(Index));
             }
 
-
-            return RedirectToAction(nameof(Index));
+            var badRequest = await getBadRequest(result);
+            ModelState.AddModelError(string.Empty, badRequest.Message);
+            return View(request);
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var result = await _proxy.GetById(new GetByIdMonedaRequest { Id = id});
+            var request = new Moneda { Id = id };
+            var result = await _proxy.GetById(request);
 
-            if (result.StatusCode != System.Net.HttpStatusCode.OK)
+            if (result.IsSuccessStatusCode)
             {
-                var badRequest = await getBadRequest(result);
-
-                ModelState.AddModelError(string.Empty, badRequest.Message);
-                return View();
+                var data = await getById(result);
+                return View(data);
             }
 
-            var data = await getById(result);
-
-            var updateRequest = new UpdateMonedaRequest
-            {
-                Id = data.Id,
-                Descripcion = data.Descripcion,
-                IdCAFCI = data.IdCAFCI
-            };
-
-            return View(updateRequest);
+            var badRequest = await getBadRequest(result);
+            ModelState.AddModelError(string.Empty, badRequest.Message);
+            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(UpdateMonedaRequest request)
+        public async Task<IActionResult> Edit(Moneda request)
         {
             if (ModelState.IsValid)
             {
                 var result = await _proxy.Update(request);
-                if ((result.StatusCode != System.Net.HttpStatusCode.OK) && (result.StatusCode != System.Net.HttpStatusCode.NoContent))
+                if (result.IsSuccessStatusCode)
                 {
-                    var badRequest = await getBadRequest(result);
-
-                    ModelState.AddModelError(string.Empty, badRequest.Message);
-                    return View(request);
+                    return RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction(nameof(Index));
-
+                var badRequest = await getBadRequest(result);
+                ModelState.AddModelError(string.Empty, badRequest.Message);
+                return View(request);
             }
             return View(request);
         }
@@ -178,19 +155,18 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
         [HttpGet]
         public async Task<IActionResult> Detail(int id)
         {
-            var result = await _proxy.GetById(new GetByIdMonedaRequest { Id = id });
+            var request = new Moneda { Id = id };
+            var result = await _proxy.GetById(request);
 
-            if (result.StatusCode != System.Net.HttpStatusCode.OK)
+            if (result.IsSuccessStatusCode)
             {
-                var badRequest = await getBadRequest(result);
-
-                ModelState.AddModelError(string.Empty, badRequest.Message);
-                return View();
+                var data = await getById(result);
+                return View(data);
             }
 
-            var data = await getById(result);
-
-            return View(data);
+            var badRequest = await getBadRequest(result);
+            ModelState.AddModelError(string.Empty, badRequest.Message);
+            return View();
         }
 
 
@@ -200,9 +176,9 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private async Task<GetByIdMonedaResponse> getById(HttpResponseMessage result)
+        private async Task<Moneda> getById(HttpResponseMessage result)
         {
-            var data = JsonSerializer.Deserialize<GetByIdMonedaResponse>(
+            var data = JsonSerializer.Deserialize<Moneda>(
                     await result.Content.ReadAsStringAsync(),
                     new JsonSerializerOptions
                     {
