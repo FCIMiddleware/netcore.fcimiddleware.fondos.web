@@ -1,7 +1,7 @@
-﻿@using netcore.fcimiddleware.fondos.web.Models.V1.Monedas
-@model Moneda
+﻿@using netcore.fcimiddleware.fondos.web.Models.V1.SocGerentes
+@model SocGerente
 @{
-    ViewData["Title"] = "Borrar Moneda";
+    ViewData["Title"] = "Borrar Gerente";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,12 +10,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Monedas</h1>
+                <h1>Gerentes</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Moneda" asp-action="Index">Monedas</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="SocGerente" asp-action="Index">Gerentes</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -27,7 +27,7 @@
 <section class="content">
     <div class="row">
         <div class="col-md-6">
-            <form asp-controller="Moneda" asp-action="Delete" method="post">
+            <form asp-controller="SocGerente" asp-action="Delete" method="post">
                 <div class="text-danger" asp-validation-summary="All"></div>
                 <div class="card card-primary">
                     <div class="card-header">
@@ -36,7 +36,7 @@
                     <div class="card-body">
                         <div class="callout callout-danger">
                             <p>
-                                ¿ Desea Eliminar la Moneda con el ID { @Html.DisplayTextFor(m => m.Id) } ?
+                                ¿ Desea Eliminar la Depositaria con el ID { @Html.DisplayTextFor(m => m.Id) } ?
                             </p>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <a asp-area="" asp-controller="Moneda" asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                        <a asp-area="" asp-controller="SocGerente" asp-action="Index" class="btn btn-secondary">Cancelar</a>
                         <input type="submit" value="Aceptar" class="btn btn-danger float-right">
                     </div>
                 </div>

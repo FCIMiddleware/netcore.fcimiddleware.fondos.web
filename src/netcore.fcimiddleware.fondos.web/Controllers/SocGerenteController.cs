@@ -1,25 +1,27 @@
-using Microsoft.AspNetCore.Mvc;
-using netcore.fcimiddleware.fondos.web.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using netcore.fcimiddleware.fondos.web.Models.Shared;
-using netcore.fcimiddleware.fondos.web.Models.V1.Paises;
-using netcore.fcimiddleware.fondos.web.Services.Paises;
+using netcore.fcimiddleware.fondos.web.Models.V1.SocDepositarias;
+using netcore.fcimiddleware.fondos.web.Models;
+using netcore.fcimiddleware.fondos.web.Services.SocGerentes;
 using System.Diagnostics;
 using System.Text.Json;
+using netcore.fcimiddleware.fondos.web.Models.V1.SocGerentes;
 
 namespace netcore.fcimiddleware.fondos.web.Controllers
 {
-    public class PaisController : Controller
+    public class SocGerenteController : Controller
     {
-        private readonly ILogger<PaisController> _logger;
-        private readonly IPaisProxy _proxy;
+        private readonly ILogger<SocGerenteController> _logger;
+        private readonly ISocGerenteProxy _proxy;
 
-        public PaisController(
-            ILogger<PaisController> logger, 
-            IPaisProxy proxy )
+        public SocGerenteController(
+            ILogger<SocGerenteController> logger,
+            ISocGerenteProxy proxy)
         {
             _logger = logger;
             _proxy = proxy;
         }
+
 
         #region "Pagination"
         [HttpGet]
@@ -31,30 +33,29 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
             ViewData["pageIndex"] = pageIndex;
             var result = await _proxy.Pagination(new PaginationQueryRequest { PageIndex = pageIndex, PageSize = pageSize, Search = search, Sort = sort });
 
-            if (result.StatusCode != System.Net.HttpStatusCode.OK)
+            if (result.IsSuccessStatusCode)
             {
-                var badRequest = await getBadRequest(result);
-
-                ModelState.AddModelError(string.Empty, badRequest.Message);
-                return RedirectToAction("Index", "Home");
-            }
-
-            var data = JsonSerializer.Deserialize<PaginationQueryResponse<Pais>>(
+                var data = JsonSerializer.Deserialize<PaginationQueryResponse<SocGerente>>(
                     await result.Content.ReadAsStringAsync(),
                     new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
                     }
                 );
+                return View(data);
+            }
 
-            return View(data);
+            var badRequest = await getBadRequest(result);
+            ModelState.AddModelError(string.Empty, badRequest.Message);
+            return RedirectToAction("Index", "Home");
+
         }
         #endregion
 
         #region "Add"
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(Pais request)
+        public async Task<IActionResult> Add(SocGerente request)
         {
             if (ModelState.IsValid)
             {
@@ -68,20 +69,21 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
                             PropertyNameCaseInsensitive = true
                         }
                     );
-                    return RedirectToAction(nameof(Index));                    
+                    return RedirectToAction(nameof(Index));
                 }
 
                 var badRequest = await getBadRequest(result);
                 ModelState.AddModelError(string.Empty, badRequest.Message);
                 return View(request);
             }
+
             return View(request);
         }
 
         [HttpGet]
         public IActionResult Add()
         {
-            Pais model = new Pais();
+            SocGerente model = new SocGerente();
             return View(model);
         }
         #endregion
@@ -90,15 +92,16 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var request = new Pais { Id = id };
+            var request = new SocGerente { Id = id };
             var result = await _proxy.GetById(request);
 
             if (result.IsSuccessStatusCode)
             {
                 var data = await getById(result);
 
-                return View(data);
+                return View(request);
             }
+
             var badRequest = await getBadRequest(result);
 
             ModelState.AddModelError(string.Empty, badRequest.Message);
@@ -107,14 +110,17 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(Pais request)
+        public async Task<IActionResult> Delete(SocGerente request)
         {
             var result = await _proxy.Delete(request);
+
             if (result.IsSuccessStatusCode)
             {
-                return RedirectToAction(nameof(Index));                
+                return RedirectToAction(nameof(Index));
             }
+
             var badRequest = await getBadRequest(result);
+
             ModelState.AddModelError(string.Empty, badRequest.Message);
             return View(request);
         }
@@ -124,7 +130,7 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var request = new Pais { Id = id };
+            var request = new SocGerente { Id = id };
             var result = await _proxy.GetById(request);
 
             if (result.IsSuccessStatusCode)
@@ -140,7 +146,7 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Pais request)
+        public async Task<IActionResult> Edit(SocGerente request)
         {
             if (ModelState.IsValid)
             {
@@ -148,7 +154,6 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
                 if (result.IsSuccessStatusCode)
                 {
                     return RedirectToAction(nameof(Index));
-                    
                 }
 
                 var badRequest = await getBadRequest(result);
@@ -159,21 +164,18 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
         }
         #endregion
 
-        #region "View"
+        #region "Detail"
         [HttpGet]
-        public async Task<IActionResult> Detail(int id)
+        public async Task<IActionResult> Detail(SocGerente request)
         {
-            var request = new Pais { Id = id };
             var result = await _proxy.GetById(request);
-
             if (result.IsSuccessStatusCode)
             {
                 var data = await getById(result);
-
-                return View(data);                
+                return View(data);
             }
-            var badRequest = await getBadRequest(result);
 
+            var badRequest = await getBadRequest(result);
             ModelState.AddModelError(string.Empty, badRequest.Message);
             return View();
         }
@@ -186,9 +188,9 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
         }
 
         #region "Private Method"
-        private async Task<Pais> getById(HttpResponseMessage result)
+        private async Task<SocGerente> getById(HttpResponseMessage result)
         {
-            var data = JsonSerializer.Deserialize<Pais>(
+            var data = JsonSerializer.Deserialize<SocGerente>(
                     await result.Content.ReadAsStringAsync(),
                     new JsonSerializerOptions
                     {

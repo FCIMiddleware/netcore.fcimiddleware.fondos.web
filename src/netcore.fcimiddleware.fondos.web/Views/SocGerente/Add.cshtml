@@ -1,7 +1,7 @@
-﻿@using netcore.fcimiddleware.fondos.web.Models.V1.Paises
-@model Pais
+﻿@using netcore.fcimiddleware.fondos.web.Models.V1.SocGerentes
+@model SocGerente
 @{
-    ViewData["Title"] = "Editar Pais";
+    ViewData["Title"] = "Agregar Gerente";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,12 +10,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Paises</h1>
+                <h1>Gerentes</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Pais" asp-action="Index">Paises</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="SocGerente" asp-action="Index">Gerentes</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -27,12 +27,13 @@
 <section class="content">
     <div class="row">
         <div class="col-md-6">
-            <form asp-controller="Pais" asp-action="Edit" method="post">
+            <form asp-controller="SocGerente" asp-action="Add" method="post">
             <div class="card card-primary">
                 <div class="card-header">
                     <h3 class="card-title">@ViewData["Title"]</h3>
 
                     <div class="card-tools">
+                        
                     </div>
                 </div>                
                 <div class="card-body">
@@ -43,12 +44,18 @@
                     <div class="input-group mb-3">
                         <input asp-for="IdCAFCI" type="text" class="form-control" placeholder="Codigo CAFCI">
                     </div>
+                    <div class="icheck-primary">
+                        <label for="sincroniza">
+                            Sincroniza
+                        </label>
+                        <input asp-for="IsSincronized" type="checkbox">
+                    </div>
                 </div>                
                 <!-- /.card-body -->
             </div>
             <div class="row">
                 <div class="col-12">
-                        <a asp-area="" asp-controller="Pais" asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                    <a asp-area="" asp-controller="SocGerente" asp-action="Index" class="btn btn-secondary">Cancelar</a>
                     <input type="submit" value="Aceptar" class="btn btn-success float-right">
                 </div>
             </div>
