@@ -12,7 +12,7 @@ namespace netcore.fcimiddleware.fondos.web.Services.Monedas
         private readonly ApiUrls _apiUrls;
         private readonly HttpClient _httpClient;
         private readonly ILogger<MonedaProxy> _logger;
-        private string _entidad = "Pais";
+        private string _entidad = "Moneda";
         private string _version = "v1";
 
         public MonedaProxy(
