@@ -1,4 +1,5 @@
 using netcore.fcimiddleware.fondos.web.Services.AgColocadores;
+using netcore.fcimiddleware.fondos.web.Services.Fondos;
 using netcore.fcimiddleware.fondos.web.Services.Monedas;
 using netcore.fcimiddleware.fondos.web.Services.Paises;
 using netcore.fcimiddleware.fondos.web.Services.Proxies;
@@ -16,12 +17,12 @@ builder.Services.Configure<ApiUrls>(
     );
 
 // Proxies
-
 builder.Services.AddHttpClient<ISocDepositariaProxy, SocDepositariaProxy>();
 builder.Services.AddHttpClient<IPaisProxy, PaisProxy>();
 builder.Services.AddHttpClient<IMonedaProxy, MonedaProxy>();
 builder.Services.AddHttpClient<ISocGerenteProxy, SocGerenteProxy>();
 builder.Services.AddHttpClient<IAgColocadorProxy, AgColocadorProxy>();
+builder.Services.AddHttpClient<IFondoProxy, FondoProxy>();
 
 
 var app = builder.Build();

@@ -49,6 +49,23 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
             return RedirectToAction("Index", "Home");
 
         }
+
+        [HttpGet]
+        public async Task<JsonResult> List(string? searchSocDepositaria = "")
+        {
+            //Fondo model = new Fondo();
+            ViewData["searchSocDepositaria"] = searchSocDepositaria;
+            var result = await _proxy.List(new PaginationQueryRequest { PageIndex = 1, PageSize = 10, Search = searchSocDepositaria, Sort = "descripcionAsc" });
+            var data = JsonSerializer.Deserialize<PaginationQueryResponse<SocDepositariaList>>(
+                    await result.Content.ReadAsStringAsync(),
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }
+                );
+
+            return Json(data);
+        }
         #endregion
 
         #region "Add"

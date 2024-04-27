@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="~/adminlte/plugins/fontawesome-free/css/all.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="~/adminlte/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="~/adminlte/plugins/select2/css/select2.min.css">
+    @* <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"> *@
+    
+    
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -201,9 +205,7 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="AgColocador" asp-action="Index">
                             <i class="fa fa-minus nav-icon"></i>
-                            <p>Agentes Colocadores
-                                <span class="right badge badge-danger">New</span>
-                            </p>
+                            <p>Agentes Colocadores</p>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -213,9 +215,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a class="nav-link" asp-area="" asp-controller="Fondo" asp-action="Index">
                             <i class="fa fa-minus nav-icon"></i>
-                            <p>Fondos</p>
+                            <p>Fondos
+                                <span class="right badge badge-danger">New</span>
+                            </p>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -233,17 +237,13 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="SocDepositaria" asp-action="Index">
                             <i class="fa fa-minus nav-icon"></i>
-                            <p>Sociedades Depositarias
-                                <span class="right badge badge-danger">New</span>
-                            </p>
+                            <p>Sociedades Depositarias</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="SocGerente" asp-action="Index">
                             <i class="fa fa-minus nav-icon"></i>
-                            <p>Sociedades Gerentes
-                                <span class="right badge badge-danger">New</span>
-                            </p>
+                            <p>Sociedades Gerentes</p>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -296,6 +296,7 @@
     <script src="~/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="~/adminlte/dist/js/adminlte.min.js"></script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

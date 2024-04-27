@@ -1,0 +1,250 @@
+﻿@using netcore.fcimiddleware.fondos.web.Models.V1.Fondos
+@model FondoCreateRequest
+@{
+    ViewData["Title"] = "Agregar Fondo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Fondos</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Fondo" asp-action="Index">Fondos</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <form asp-controller="Fondo" asp-action="Add" method="post">
+    <div class="row">
+        <div class="col-md-6">            
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">@ViewData["Title"]</h3>
+
+                    <div class="card-tools">
+                        
+                    </div>
+                </div>                
+                <div class="card-body">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                    <div class="input-group mb-3">
+                        <input asp-for="Descripcion" type="text" class="form-control" placeholder="Descripcion">
+                    </div>
+                    <div class="input-group mb-3">
+                        <input asp-for="IdCAFCI" type="text" class="form-control" placeholder="Codigo CAFCI">
+                    </div>
+                    <div class="input-group mb-3">
+                        <input asp-for="MonedaId" type="hidden" id="MonedaId" class="form-control">
+                        <select class="form-control" id="MonedaList">
+                        </select>
+                    </div>
+                    <div class="icheck-primary">
+                        <label for="sincroniza">
+                            Sincroniza
+                        </label>
+                        <input asp-for="IsSincronized" type="checkbox">
+                    </div>
+                </div>                
+                <!-- /.card-body -->
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <a asp-area="" asp-controller="Fondo" asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                    <input type="submit" value="Aceptar" class="btn btn-success float-right">
+                </div>
+            </div>            
+            <!-- /.card -->
+        </div>
+        <div class="col-md-6">
+            <div class="card card-secondary">
+                <div class="card-header">
+                    <h3 class="card-title">Configuración</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <input asp-for="PaisId" type="hidden" id="PaisId" class="form-control">
+                        <select class="form-control" id="PaisList">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="SocGerenteId" type="hidden" id="SocGerenteId" class="form-control">
+                        <select class="form-control" id="SocGerenteList">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="SocDepositariaId" type="hidden" id="SocDepositariaId" class="form-control">
+                        <select class="form-control" id="SocDepositariaList">
+                        </select>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    </form>
+</section>
+<!-- /.content -->
+@section scripts {
+    <script src="~/adminlte/plugins/select2/js/select2.min.js"></script>
+    <script src="~/adminlte/plugins/select2/js/i18n//es.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#MonedaList").select2({
+                language: "es",
+                ajax: {
+                    type: 'GET',
+                    url: 'http://localhost:8000/Moneda/list',
+                    dataType: 'json',
+                    delay: 300,
+                    data: function (params) {
+                        return {
+                            searchMoneda: params.term
+                        }
+                    },
+                    processResults: function (data) {
+                        var results = [];
+                        $.each(data.data, function (index, item) {
+                            results.push({
+                                id: item.id,
+                                text: item.descripcion
+                            })
+                        });
+                        return { results };
+                    },
+                    cache: true,
+                },
+                placeholder: 'Selecciona Moneda',
+                minimumInputLenght: 2
+            });
+
+            $("#SocGerenteList").select2({
+                language: "es",
+                ajax: {
+                    type: 'GET',
+                    url: 'http://localhost:8000/SocGerente/list',
+                    dataType: 'json',
+                    delay: 300,
+                    data: function (params) {
+                        return {
+                            searchMoneda: params.term
+                        }
+                    },
+                    processResults: function (data) {
+                        var results = [];
+                        $.each(data.data, function (index, item) {
+                            results.push({
+                                id: item.id,
+                                text: item.descripcion
+                            })
+                        });
+                        return { results };
+                    },
+                    cache: true,
+                },
+                placeholder: 'Selecciona Sociedad Gerente',
+                minimumInputLenght: 2
+            });
+
+            $("#SocDepositariaList").select2({
+                language: "es",
+                ajax: {
+                    type: 'GET',
+                    url: 'http://localhost:8000/SocDepositaria/list',
+                    dataType: 'json',
+                    delay: 300,
+                    data: function (params) {
+                        return {
+                            searchSocDepositaria: params.term
+                        }
+                    },
+                    processResults: function (data) {
+                        var results = [];
+                        $.each(data.data, function (index, item) {
+                            results.push({
+                                id: item.id,
+                                text: item.descripcion
+                            })
+                        });
+                        return { results };
+                    },
+                    cache: true,
+                },
+                placeholder: 'Selecciona Sociedad Depositaria',
+                minimumInputLenght: 2
+            });
+
+            $("#PaisList").select2({
+                language: "es",
+                ajax: {
+                    type: 'GET',
+                    url: 'http://localhost:8000/Pais/list',
+                    dataType: 'json',
+                    delay: 300,
+                    data: function (params) {
+                        return {
+                            searchPais: params.term
+                        }
+                    },
+                    processResults: function (data) {
+                        var results = [];
+                        $.each(data.data, function (index, item) {
+                            results.push({
+                                id: item.id,
+                                text: item.descripcion
+                            })
+                        });
+                        return { results };
+                    },
+                    cache: true,
+                },
+                placeholder: 'Selecciona Pais',
+                minimumInputLenght: 2
+            });
+
+            $("#MonedaList").on('select2:select', function (e) {
+                var data = e.params.data;
+                $("#MonedaId").val(data.id);
+            });
+
+            $("#SocGerenteList").on('select2:select', function (e) {
+                var data = e.params.data;
+                $("#SocGerenteId").val(data.id);
+            });
+
+            $("#SocDepositariaList").on('select2:select', function (e) {
+                var data = e.params.data;
+                $("#SocDepositariaId").val(data.id);
+            });
+
+            $("#PaisList").on('select2:select', function (e) {
+                var data = e.params.data;
+                $("#PaisId").val(data.id);
+            });
+
+            $('#PaisList').on('select2:unselect', function (e) {
+                var data = e.params.data;
+                console.log(data);
+            });
+        });
+
+        
+        //console.log($("#PaisId").val());
+        /*console.log(document.getElementById('PaisId').value);
+        $('#PaisList').val(document.getElementById('PaisId').value);
+        $('#PaisList').trigger('change.select2');
+        $('#PaisList').select2({ data: document.getElementById('PaisId').value })*/
+    </script>
+    
+}

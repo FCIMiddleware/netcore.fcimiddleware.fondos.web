@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using netcore.fcimiddleware.fondos.web.Models;
 using netcore.fcimiddleware.fondos.web.Models.Shared;
+using netcore.fcimiddleware.fondos.web.Models.V1.Monedas;
 using netcore.fcimiddleware.fondos.web.Models.V1.Paises;
 using netcore.fcimiddleware.fondos.web.Services.Paises;
 using System.Diagnostics;
@@ -48,6 +49,22 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
                 );
 
             return View(data);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> List(string? searchPais = "")
+        {
+            ViewData["searchPais"] = searchPais;
+            var result = await _proxy.List(new PaginationQueryRequest { PageIndex = 1, PageSize = 10, Search = searchPais, Sort = "descripcionAsc" });
+            var data = JsonSerializer.Deserialize<PaginationQueryResponse<PaisList>>(
+                    await result.Content.ReadAsStringAsync(),
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }
+                );
+
+            return Json(data);
         }
         #endregion
 

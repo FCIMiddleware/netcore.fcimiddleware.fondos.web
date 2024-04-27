@@ -54,6 +54,14 @@ namespace netcore.fcimiddleware.fondos.web.Services.Paises
                     _apiUrls.FondoApiUrl + $"api/{_version}/{_entidad}/pagination?PageIndex={request.PageIndex}&PageSize={request.PageSize}&Search={request.Search}&Sort={request.Sort}");
         }
 
+        public async Task<HttpResponseMessage> List(PaginationQueryRequest request)
+        {
+            return
+                await _httpClient
+                .GetAsync(
+                    _apiUrls.FondoApiUrl + $"api/{_version}/{_entidad}/list?PageIndex={request.PageIndex}&PageSize={request.PageSize}&Search={request.Search}&Sort={request.Sort}");
+        }
+
         public async Task<HttpResponseMessage> Update(Pais request)
         {
             StringContent content = new StringContent(

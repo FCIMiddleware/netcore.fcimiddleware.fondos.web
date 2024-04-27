@@ -1,0 +1,56 @@
+﻿@using netcore.fcimiddleware.fondos.web.Models.V1.Fondos
+@model Fondo
+@{
+    ViewData["Title"] = "Borrar Fondo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Fondos</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Fondo" asp-action="Index">Fondos</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-controller="Fondo" asp-action="Delete" method="post">
+                <div class="text-danger" asp-validation-summary="All"></div>
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">@ViewData["Title"]</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="callout callout-danger">
+                            <p>
+                                ¿ Desea Eliminar el Fondo con el ID { @Html.DisplayTextFor(m => m.Id) } ?
+                            </p>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <a asp-area="" asp-controller="Fondo" asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                        <input type="submit" value="Aceptar" class="btn btn-danger float-right">
+                    </div>
+                </div>
+            </form>
+            <!-- /.card -->
+        </div>
+    </div>
+</section>
+<!-- /.content -->

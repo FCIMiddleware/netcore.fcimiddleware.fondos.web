@@ -2,7 +2,6 @@
 using netcore.fcimiddleware.fondos.web.Models.Shared;
 using netcore.fcimiddleware.fondos.web.Models.V1.SocGerentes;
 using netcore.fcimiddleware.fondos.web.Services.Proxies;
-using netcore.fcimiddleware.fondos.web.Services.SocDepositarias;
 using System.Text;
 using System.Text.Json;
 
@@ -53,6 +52,14 @@ namespace netcore.fcimiddleware.fondos.web.Services.SocGerentes
                 await _httpClient
                 .GetAsync(
                     _apiUrls.FondoApiUrl + $"api/{_version}/{_entidad}/pagination?PageIndex={request.PageIndex}&PageSize={request.PageSize}&Search={request.Search}&Sort={request.Sort}");
+        }
+
+        public async Task<HttpResponseMessage> List(PaginationQueryRequest request)
+        {
+            return
+                await _httpClient
+                .GetAsync(
+                    _apiUrls.FondoApiUrl + $"api/{_version}/{_entidad}/list?PageIndex={request.PageIndex}&PageSize={request.PageSize}&Search={request.Search}&Sort={request.Sort}");
         }
 
         public async Task<HttpResponseMessage> Update(SocGerente request)

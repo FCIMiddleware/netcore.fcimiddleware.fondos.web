@@ -201,5 +201,22 @@ namespace netcore.fcimiddleware.fondos.web.Controllers
 
             return badRequest;
         }
+
+        [HttpGet]
+        public async Task<JsonResult> List(string? searchMoneda = "")
+        {
+            //Fondo model = new Fondo();
+            ViewData["searchMoneda"] = searchMoneda;
+            var result = await _proxy.List(new PaginationQueryRequest { PageIndex = 1, PageSize = 10, Search = searchMoneda, Sort = "descripcionAsc" });
+            var data = JsonSerializer.Deserialize<PaginationQueryResponse<MonedaList>>(
+                    await result.Content.ReadAsStringAsync(),
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }
+                );
+            
+            return Json(data);
+        }
     }
 }
